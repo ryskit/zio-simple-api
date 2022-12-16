@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Create App Runner
+Parameters:
+  EnvType:
+    Description: Environment type.
+    Type: String
+    AllowedValues: [dev, stg, prod]
+    ConstraintDescription: must specify dev, stg or prod.
+Resources:
+  AppRunnerService:
+    Type: AWS::AppRunner::Service
+    Properties:
+      HealthCheckConfiguration:
+        HealthyThreshold: 1
+        Interval: 5
+        Path: "/"
+        Protocol: TCP
+        Timeout: 2
+        UnhealthyThreshold: 5
+      InstanceConfiguration:
+        Cpu: '1 vCPU'
+        Memory: '2 GB'
+      ServiceName: !Sub 'zio-simple-api-${EnvType}'
+      SourceConfiguration:
+        AuthenticationConfiguration:
+          AccessRoleArn:
+            Fn::ImportValue: zio-simple-api-access-role-arn
+        ImageRepository:
+          ImageConfiguration:
+            Port: '9000'
+          ImageIdentifier:
+            Fn::Join:
+            - ''
+            - - Fn::ImportValue: zio-simple-api-ecr-repository-uri
+              - ':1.0.0'
+          ImageRepositoryType: 'ECR'

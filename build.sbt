@@ -21,7 +21,7 @@ lazy val root = (project in file("."))
     )
   )
   .settings(
-    Docker / packageName := "XXXXXXXXXXXX.dkr.ecr.ap-northeast-1.amazonaws.com/XXXXXXXX",
+    Docker / packageName := "<aws account_id>.dkr.ecr.<region name>.amazonaws.com/<repository name>",
     dockerExposedPorts ++= Seq(9000, 9000),
     dockerBaseImage := "openjdk:11",
     dockerBuildCommand := {

@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Create ECR
+Parameters:
+  EnvType:
+    Description: Environment type.
+    Type: String
+    AllowedValues: [dev, stg, prod]
+    ConstraintDescription: must specify dev, stg or prod.
+Resources:
+  ECRRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub "zio-simple-api-${EnvType}"
+      ImageTagMutability: IMMUTABLE
+Outputs:
+  EcrRepositoryUri:
+    Value: !GetAtt ECRRepository.RepositoryUri
+    Export:
+      Name: zio-simple-api-ecr-repository-uri

@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Create IAM Role
+Parameters:
+  EnvType:
+    Description: Environment type.
+    Type: String
+    AllowedValues: [dev, stg, prod]
+    ConstraintDescription: must specify dev, stg or prod.
+Resources:
+  AppRunnerAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'zio-simple-api-${EnvType}-apprunner-access-role'
+      Description: zio simple api access role for appruner
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - build.apprunner.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess
+#  AppRunnerInstanceRole:
+#    Type: AWS::IAM::Role
+#    Properties:
+#      RoleName: !Sub 'zio-simple-api-${EnvType}-apprunner-instance-role'
+#      Description: zio simple api instance role for appruner
+#      AssumeRolePolicyDocument:
+#        Version: '2012-10-17'
+#        Statement:
+#          - Effect: Allow
+#            Principal:
+#              Service:
+#                - tasks.apprunner.amazonaws.com
+#            Action:
+#              - sts:AssumeRole
+#      Path: /
+#      ManagedPolicyArns:
+#        - arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess
+Outputs:
+  RoleArn:
+    Value: !GetAtt AppRunnerAccessRole.Arn
+    Export:
+      Name: zio-simple-api-access-role-arn
