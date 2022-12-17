@@ -29,3 +29,23 @@ $ aws cloudformation create-stack \
 --template-body file://03_apprunner.yml \
 --parameters ParameterKey=EnvType,ParameterValue=dev
 ```
+
+## AppRunnerの削除
+
+```sh
+aws cloudformation delete-stack --stack-name zio-simple-api-apprunner
+```
+
+## IAMの作成の削除
+
+```sh
+aws cloudformation delete-stack --stack-name zio-simple-api-iam
+```
+
+## ECRの削除
+
+ECRは削除する前に登録されているイメージを削除してください。
+
+```sh
+aws cloudformation delete-stack --stack-name zio-simple-api-ecr
+```
